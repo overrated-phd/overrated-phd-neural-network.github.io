@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Networks & Deep Learning Fundamentals</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            color: #1a1a1a;
+            line-height: 1.8;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .source-badge {
+            display: inline-block;
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .source-badge a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .source-badge a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 25px;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        h2 {
+            color: #1a1a1a;
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2 .icon {
+            font-size: 1.4rem;
+            opacity: 0.7;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        strong {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: #f8f8f8;
+            border-left: 3px solid #1a1a1a;
+            padding: 20px 25px;
+            border-radius: 0 8px 8px 0;
+            margin: 25px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            color: #333;
+            font-style: italic;
+        }
+
+        /* Interactive Concept Cards */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .concept-card {
+            background: #f0f0f0;
+            padding: 25px 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .concept-card:hover {
+            background: #e8e8e8;
+            border-color: #999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .concept-card.active {
+            background: #e0e0e0;
+            border-color: #1a1a1a;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .concept-card .emoji {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .concept-card:hover .emoji,
+        .concept-card.active .emoji {
+            opacity: 1;
+        }
+
+        .concept-card h3 {
+            color: #1a1a1a;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .concept-card p {
+            font-size: 0.85rem;
+            color: #1a1a1a;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .click-hint {
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .concept-card:hover .click-hint {
+            color: #1a1a1a;
+        }
+
+        /* Math Detail Panel */
+        .math-detail-panel {
+            display: none;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 35px;
+            margin-top: 25px;
+            animation: slideDown 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .math-detail-panel.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .math-detail-panel h3 {
+            color: #1a1a1a;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .math-detail-panel .close-btn {
+            margin-left: auto;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            color: #666;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .math-detail-panel .close-btn:hover {
+            background: #1a1a1a;
+            border-color: #1a1a1a;
+            color: #fff;
+        }
+
+        .math-section {
+            margin-bottom: 30px;
+        }
+
+        .math-section h4 {
+            color: #1a1a1a;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .math-box {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-left: 3px solid #333;
+            overflow-x: auto;
+        }
+
+        .math-box.formula {
+            text-align: center;
+            font-size: 1.1rem;
+            background: #fafafa;
+        }
+
+        .math-box p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .variable-list {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px 25px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .variable-list .var {
+            color: #1a1a1a;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .variable-list .desc {
+            color: #666;
+        }
+
+        .example-box {
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .example-box h5 {
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            counter-increment: step;
+            padding: 12px 0 12px 50px;
+            position: relative;
+            border-bottom: 1px solid #eee;
+            color: #444;
+        }
+
+        .step-list li:last-child {
+            border-bottom: none;
+        }
+
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 30px;
+            height: 30px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        .intuition-box {
+            background: #fff;
+            border: 2px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .intuition-box h5 {
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .intuition-box p {
+            color: #444;
+            margin: 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 35px;
+            margin-top: 25px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(180deg, #1a1a1a, #ccc);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            background: #1a1a1a;
+            border-radius: 50%;
+        }
+
+        .timeline-item h3 {
+            color: #1a1a1a;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .timeline-item p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #555;
+            border-left: 3px solid #1a1a1a;
+            padding-left: 25px;
+            margin: 30px 0;
+            font-size: 1.05rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* KaTeX styling */
+        .katex {
+            color: #1a1a1a;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            section {
+                padding: 25px;
+            }
+            
+            .math-detail-panel {
+                padding: 25px;
+            }
+            
+            .concept-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Neural Networks & Deep Learning</h1>
+            <p class="subtitle">Understanding the Fundamentals That Power Modern AI</p>
+            <div class="source-badge">
+                Based on <a href="http://neuralnetworksanddeeplearning.com/" target="_blank">Michael A. Nielsen's Book</a>
+            </div>
+        </header>
+
+        <section>
+            <h2><span class="icon">◉</span> What Are Neural Networks?</h2>
+            <p>
+                Neural networks represent a paradigm shift in computing. Unlike traditional programming where we explicitly tell computers what to do, neural networks <strong>learn from observational data</strong>, automatically discovering patterns and rules to solve problems.
+            </p>
+            <div class="highlight-box">
+                <p>
+                    "In a neural network we don't tell the computer how to solve our problem. Instead, it learns from observational data, figuring out its own solution."
+                </p>
+            </div>
+            <p>
+                This biologically-inspired approach enables computers to tackle problems that are extremely difficult to solve with conventional programming—like recognizing handwritten digits, understanding speech, or processing natural language.
+            </p>
+        </section>
+
+        <section>
+            <h2><span class="icon">◈</span> Why Deep Learning Matters</h2>
+            <p>
+                Until 2006, neural networks couldn't consistently outperform traditional approaches. The breakthrough came with the discovery of techniques for training <strong>deep neural networks</strong>—networks with many hidden layers that can learn increasingly abstract representations of data.
+            </p>
+            <p>
+                Today, deep learning achieves outstanding performance in computer vision, speech recognition, and natural language processing, and is deployed at massive scale by leading technology companies worldwide.
+            </p>
+        </section>
+
+        <section>
+            <h2><span class="icon">◎</span> Core Concepts</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Click on any concept below to explore the mathematical details</p>
+            
+            <div class="concept-grid">
+                <div class="concept-card" onclick="showDetail('perceptron')">
+                    <div class="emoji">⬤</div>
+                    <h3>Perceptrons</h3>
+                    <p>The simplest artificial neuron—takes binary inputs and produces binary output based on weighted sums</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+                <div class="concept-card" onclick="showDetail('sigmoid')">
+                    <div class="emoji">∿</div>
+                    <h3>Sigmoid Neurons</h3>
+                    <p>Smooth activation enabling small weight changes to produce small output changes—essential for learning</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+                <div class="concept-card" onclick="showDetail('backprop')">
+                    <div class="emoji">⟲</div>
+                    <h3>Backpropagation</h3>
+                    <p>The algorithm that enables networks to learn by propagating errors backward through layers</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+                <div class="concept-card" onclick="showDetail('gradient')">
+                    <div class="emoji">▽</div>
+                    <h3>Gradient Descent</h3>
+                    <p>Optimization technique that iteratively adjusts weights to minimize prediction errors</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+            </div>
+
+            <!-- Perceptron Detail Panel -->
+            <div id="perceptron-detail" class="math-detail-panel">
+                <h3>
+                    <span>Perceptrons — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('perceptron')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>Core Formula</h4>
+                    <div class="math-box formula">
+                        $$\text{output} = \begin{cases} 0 & \text{if } \sum_j w_j x_j \leq \text{threshold} \\ 1 & \text{if } \sum_j w_j x_j > \text{threshold} \end{cases}$$
+                    </div>
+                    <p>The perceptron computes a weighted sum of its inputs and applies a step function to produce a binary output.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Simplified Notation with Bias</h4>
+                    <div class="math-box formula">
+                        $$\text{output} = \begin{cases} 0 & \text{if } w \cdot x + b \leq 0 \\ 1 & \text{if } w \cdot x + b > 0 \end{cases}$$
+                    </div>
+                    <p>Where $b \equiv -\text{threshold}$ is called the <strong>bias</strong>. This measures how easy it is to get the perceptron to output 1.</p>
+                    
+                    <div class="variable-list">
+                        <span class="var">$x_j$</span><span class="desc">Input values (binary: 0 or 1)</span>
+                        <span class="var">$w_j$</span><span class="desc">Weights representing importance of each input</span>
+                        <span class="var">$b$</span><span class="desc">Bias term (negative threshold)</span>
+                        <span class="var">$w \cdot x$</span><span class="desc">Dot product: $\sum_j w_j x_j$</span>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h5>Example: Decision Making</h5>
+                    <p>Deciding whether to go to a festival based on three factors:</p>
+                    <ul class="step-list">
+                        <li>$x_1$ = Is the weather good? (weight $w_1 = 6$)</li>
+                        <li>$x_2$ = Does your partner want to go? (weight $w_2 = 2$)</li>
+                        <li>$x_3$ = Is it near public transit? (weight $w_3 = 2$)</li>
+                    </ul>
+                    <p style="margin-top: 15px; margin-bottom: 0;">With threshold = 5, if weather is good ($x_1=1$): $6(1) + 2(0) + 2(0) = 6 > 5$ → Go! ✓</p>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>A perceptron is a simple decision-maker that weighs evidence. Large weights mean that input matters more. The bias controls how "trigger-happy" the neuron is—a large positive bias means it fires easily.</p>
+                </div>
+            </div>
+
+            <!-- Sigmoid Detail Panel -->
+            <div id="sigmoid-detail" class="math-detail-panel">
+                <h3>
+                    <span>Sigmoid Neurons — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('sigmoid')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>The Sigmoid Function</h4>
+                    <div class="math-box formula">
+                        $$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+                    </div>
+                    <p>The sigmoid function "squashes" any real number into the range (0, 1), providing a smooth, differentiable activation.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Neuron Output</h4>
+                    <div class="math-box formula">
+                        $$a = \sigma(w \cdot x + b) = \frac{1}{1 + \exp(-\sum_j w_j x_j - b)}$$
+                    </div>
+                    
+                    <div class="variable-list">
+                        <span class="var">$z$</span><span class="desc">Weighted input: $z = w \cdot x + b$</span>
+                        <span class="var">$a$</span><span class="desc">Activation (output) of the neuron</span>
+                        <span class="var">$\sigma$</span><span class="desc">Sigmoid activation function</span>
+                        <span class="var">$e$</span><span class="desc">Euler's number ≈ 2.71828</span>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Key Derivative (Critical for Learning)</h4>
+                    <div class="math-box formula">
+                        $$\sigma'(z) = \sigma(z)(1 - \sigma(z))$$
+                    </div>
+                    <p>This elegant property makes the derivative easy to compute—it's just the output times one minus the output!</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Why Sigmoid Matters</h4>
+                    <div class="math-box">
+                        <p>Small changes in weights produce small changes in output:</p>
+                        $$\Delta \text{output} \approx \sum_j \frac{\partial \text{output}}{\partial w_j} \Delta w_j + \frac{\partial \text{output}}{\partial b} \Delta b$$
+                    </div>
+                    <p>This is crucial for learning! Unlike perceptrons where output jumps between 0 and 1, sigmoid allows gradual adjustments.</p>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>Think of $z = w \cdot x + b$ as "evidence". When $z$ is large and positive → $\sigma(z) \approx 1$ (strong yes). When $z$ is large and negative → $\sigma(z) \approx 0$ (strong no). When $z \approx 0$ → $\sigma(z) \approx 0.5$ (uncertain).</p>
+                </div>
+            </div>
+
+            <!-- Backpropagation Detail Panel -->
+            <div id="backprop-detail" class="math-detail-panel">
+                <h3>
+                    <span>Backpropagation — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('backprop')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>The Four Fundamental Equations</h4>
+                    <p>Backpropagation is built on four key equations that compute the error and gradients efficiently:</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>BP1: Error in Output Layer</h4>
+                    <div class="math-box formula">
+                        $$\delta^L = \nabla_a C \odot \sigma'(z^L)$$
+                    </div>
+                    <p>The error $\delta^L$ in the output layer combines how fast the cost changes with activation ($\nabla_a C$) and how fast the activation changes with weighted input ($\sigma'(z^L)$).</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>BP2: Error Propagation</h4>
+                    <div class="math-box formula">
+                        $$\delta^l = ((w^{l+1})^T \delta^{l+1}) \odot \sigma'(z^l)$$
+                    </div>
+                    <p>This propagates the error backward: the error in layer $l$ depends on the error in layer $l+1$, weighted by the connections between them.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>BP3: Gradient for Biases</h4>
+                    <div class="math-box formula">
+                        $$\frac{\partial C}{\partial b^l_j} = \delta^l_j$$
+                    </div>
+                    <p>The gradient of cost with respect to bias equals the error—beautifully simple!</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>BP4: Gradient for Weights</h4>
+                    <div class="math-box formula">
+                        $$\frac{\partial C}{\partial w^l_{jk}} = a^{l-1}_k \delta^l_j$$
+                    </div>
+                    <p>The gradient for a weight is the product of the input activation and the output error.</p>
+                    
+                    <div class="variable-list">
+                        <span class="var">$\delta^l$</span><span class="desc">Error vector for layer $l$</span>
+                        <span class="var">$C$</span><span class="desc">Cost (loss) function</span>
+                        <span class="var">$\odot$</span><span class="desc">Hadamard (element-wise) product</span>
+                        <span class="var">$a^l$</span><span class="desc">Activation vector for layer $l$</span>
+                        <span class="var">$z^l$</span><span class="desc">Weighted input vector for layer $l$</span>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h5>Algorithm Steps</h5>
+                    <ul class="step-list">
+                        <li><strong>Forward pass:</strong> Compute $z^l$ and $a^l$ for all layers</li>
+                        <li><strong>Output error:</strong> Compute $\delta^L$ using BP1</li>
+                        <li><strong>Backpropagate:</strong> For $l = L-1, L-2, ..., 2$, compute $\delta^l$ using BP2</li>
+                        <li><strong>Compute gradients:</strong> Use BP3 and BP4 to get all $\frac{\partial C}{\partial w}$ and $\frac{\partial C}{\partial b}$</li>
+                    </ul>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>Backpropagation answers: "How much did each weight contribute to the error?" It works backward from the output, attributing blame to each weight based on how much it influenced the final mistake. Weights that contributed more to the error get adjusted more.</p>
+                </div>
+            </div>
+
+            <!-- Gradient Descent Detail Panel -->
+            <div id="gradient-detail" class="math-detail-panel">
+                <h3>
+                    <span>Gradient Descent — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('gradient')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>Cost Function</h4>
+                    <div class="math-box formula">
+                        $$C(w, b) = \frac{1}{2n} \sum_x \| y(x) - a^L(x) \|^2$$
+                    </div>
+                    <p>The quadratic cost (MSE) measures the average squared difference between predictions $a^L$ and true labels $y$ across all training examples.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Update Rule</h4>
+                    <div class="math-box formula">
+                        $$w \rightarrow w' = w - \eta \frac{\partial C}{\partial w}$$
+                        $$b \rightarrow b' = b - \eta \frac{\partial C}{\partial b}$$
+                    </div>
+                    
+                    <div class="variable-list">
+                        <span class="var">$\eta$</span><span class="desc">Learning rate (step size)</span>
+                        <span class="var">$\frac{\partial C}{\partial w}$</span><span class="desc">Gradient of cost with respect to weight</span>
+                        <span class="var">$n$</span><span class="desc">Number of training examples</span>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Stochastic Gradient Descent (SGD)</h4>
+                    <div class="math-box formula">
+                        $$w \rightarrow w' = w - \frac{\eta}{m} \sum_{j=1}^{m} \frac{\partial C_{X_j}}{\partial w}$$
+                    </div>
+                    <p>Instead of computing gradients over all training data, SGD uses random mini-batches of size $m$, dramatically speeding up learning.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Gradient as Direction of Steepest Descent</h4>
+                    <div class="math-box">
+                        <p>The change in cost when we move by $\Delta v$ in parameter space:</p>
+                        $$\Delta C \approx \nabla C \cdot \Delta v$$
+                        <p>To minimize cost, we choose: $\Delta v = -\eta \nabla C$</p>
+                        <p>This gives us: $\Delta C \approx -\eta \|\nabla C\|^2 \leq 0$ (always decreasing!)</p>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h5>Mini-Batch SGD Algorithm</h5>
+                    <ul class="step-list">
+                        <li>Shuffle training data randomly</li>
+                        <li>Partition into mini-batches of size $m$</li>
+                        <li>For each mini-batch, compute gradient using backprop</li>
+                        <li>Update weights: $w \leftarrow w - \frac{\eta}{m} \sum \nabla C$</li>
+                        <li>Repeat until convergence (one full pass = one epoch)</li>
+                    </ul>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>Imagine rolling a ball down a hilly landscape where height = error. The gradient tells you which direction is steepest downhill. Taking steps opposite to the gradient moves you toward lower error. The learning rate controls step size—too large and you overshoot; too small and learning is slow.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="icon">◇</span> Advanced Topics</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;">Click on any topic below to explore the mathematical details</p>
+            
+            <div class="concept-grid">
+                <div class="concept-card" onclick="showDetail('crossentropy')">
+                    <div class="emoji">𝐇</div>
+                    <h3>Cross-Entropy Loss</h3>
+                    <p>A cost function that speeds up learning by addressing the learning slowdown problem</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+                <div class="concept-card" onclick="showDetail('regularization')">
+                    <div class="emoji">λ</div>
+                    <h3>Regularization</h3>
+                    <p>L1/L2 techniques and dropout to prevent overfitting and improve generalization</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+                <div class="concept-card" onclick="showDetail('vanishing')">
+                    <div class="emoji">↘</div>
+                    <h3>Vanishing Gradients</h3>
+                    <p>Understanding why deep networks are hard to train and solutions to unstable gradients</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+                <div class="concept-card" onclick="showDetail('cnn')">
+                    <div class="emoji">▦</div>
+                    <h3>Convolutional Networks</h3>
+                    <p>Specialized architectures with local receptive fields and shared weights for image recognition</p>
+                    <div class="click-hint">View mathematics →</div>
+                </div>
+            </div>
+
+            <!-- Cross-Entropy Detail Panel -->
+            <div id="crossentropy-detail" class="math-detail-panel">
+                <h3>
+                    <span>Cross-Entropy Loss — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('crossentropy')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>The Problem with Quadratic Cost</h4>
+                    <div class="math-box">
+                        <p>With quadratic cost and sigmoid activation, the gradient contains $\sigma'(z)$:</p>
+                        $$\frac{\partial C}{\partial w} = (a - y) \sigma'(z) x$$
+                        <p>When the neuron saturates ($\sigma'(z) \approx 0$), learning becomes extremely slow even when the output is very wrong!</p>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Cross-Entropy Cost Function</h4>
+                    <div class="math-box formula">
+                        $$C = -\frac{1}{n} \sum_x \left[ y \ln a + (1-y) \ln(1-a) \right]$$
+                    </div>
+                    
+                    <div class="variable-list">
+                        <span class="var">$n$</span><span class="desc">Number of training examples</span>
+                        <span class="var">$y$</span><span class="desc">Desired output (0 or 1)</span>
+                        <span class="var">$a$</span><span class="desc">Actual output of the neuron</span>
+                        <span class="var">$\ln$</span><span class="desc">Natural logarithm</span>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>The Key Advantage</h4>
+                    <div class="math-box formula">
+                        $$\frac{\partial C}{\partial w_j} = \frac{1}{n} \sum_x x_j (a - y)$$
+                        $$\frac{\partial C}{\partial b} = \frac{1}{n} \sum_x (a - y)$$
+                    </div>
+                    <p>The $\sigma'(z)$ term disappears! Learning speed is now controlled by the error $(a-y)$, not by how saturated the neuron is.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Softmax with Log-Likelihood</h4>
+                    <div class="math-box formula">
+                        $$a^L_j = \frac{e^{z^L_j}}{\sum_k e^{z^L_k}}$$
+                    </div>
+                    <p>For multi-class classification, softmax converts outputs to probabilities that sum to 1. Combined with log-likelihood cost:</p>
+                    <div class="math-box formula">
+                        $$C = -\ln a^L_y$$
+                    </div>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>Cross-entropy measures the "surprise" when the true distribution $y$ is encoded using the predicted distribution $a$. When prediction matches reality, surprise (and cost) is low. When they differ greatly, surprise is high, driving faster learning.</p>
+                </div>
+            </div>
+
+            <!-- Regularization Detail Panel -->
+            <div id="regularization-detail" class="math-detail-panel">
+                <h3>
+                    <span>Regularization — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('regularization')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>The Overfitting Problem</h4>
+                    <p>A network with many parameters can memorize training data instead of learning general patterns. The model fits noise rather than signal, performing poorly on new data.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>L2 Regularization (Weight Decay)</h4>
+                    <div class="math-box formula">
+                        $$C = C_0 + \frac{\lambda}{2n} \sum_w w^2$$
+                    </div>
+                    
+                    <div class="variable-list">
+                        <span class="var">$C_0$</span><span class="desc">Original unregularized cost function</span>
+                        <span class="var">$\lambda$</span><span class="desc">Regularization parameter (controls strength)</span>
+                        <span class="var">$n$</span><span class="desc">Size of training set</span>
+                        <span class="var">$\sum_w w^2$</span><span class="desc">Sum of squared weights</span>
+                    </div>
+                    
+                    <p style="margin-top: 15px;">The weight update rule becomes:</p>
+                    <div class="math-box formula">
+                        $$w \rightarrow w\left(1 - \frac{\eta \lambda}{n}\right) - \eta \frac{\partial C_0}{\partial w}$$
+                    </div>
+                    <p>Weights decay by factor $(1 - \frac{\eta \lambda}{n})$ each update, preventing them from growing too large.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>L1 Regularization</h4>
+                    <div class="math-box formula">
+                        $$C = C_0 + \frac{\lambda}{n} \sum_w |w|}$$
+                    </div>
+                    <p>The weight update becomes:</p>
+                    <div class="math-box formula">
+                        $$w \rightarrow w - \frac{\eta \lambda}{n} \text{sgn}(w) - \eta \frac{\partial C_0}{\partial w}$$
+                    </div>
+                    <p>L1 tends to concentrate weights in a smaller number of high-importance connections, creating sparse networks.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Dropout</h4>
+                    <div class="math-box">
+                        <p>During training, randomly "drop" neurons with probability $p$:</p>
+                        $$\tilde{a}^l = \frac{1}{1-p} \cdot r^l \odot a^l$$
+                        <p>where $r^l$ is a vector of Bernoulli random variables with $P(r^l_j = 1) = 1-p$</p>
+                    </div>
+                    <p>At test time, use all neurons but scale weights by $(1-p)$ to maintain expected values.</p>
+                </div>
+
+                <div class="example-box">
+                    <h5>Comparing L1 vs L2</h5>
+                    <ul class="step-list">
+                        <li><strong>L2:</strong> Penalizes large weights quadratically → weights shrink proportionally → dense, small weights</li>
+                        <li><strong>L1:</strong> Penalizes large weights linearly → constant shrinkage → sparse weights (many zeros)</li>
+                        <li><strong>Dropout:</strong> Ensemble effect → forces redundancy → robust features</li>
+                    </ul>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>Regularization embodies Occam's Razor: simpler models generalize better. By penalizing complexity (large weights), we force the network to find solutions that capture true patterns rather than memorizing noise. Dropout can be seen as training an ensemble of networks that share weights.</p>
+                </div>
+            </div>
+
+            <!-- Vanishing Gradients Detail Panel -->
+            <div id="vanishing-detail" class="math-detail-panel">
+                <h3>
+                    <span>Vanishing Gradients — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('vanishing')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>The Problem in Deep Networks</h4>
+                    <p>In networks with many layers, gradients in early layers become exponentially smaller than gradients in later layers, causing early layers to learn extremely slowly.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Gradient Flow Through Layers</h4>
+                    <div class="math-box">
+                        <p>For a deep network, the gradient in layer $l$ involves a product:</p>
+                        $$\frac{\partial C}{\partial b^l} = \sigma'(z^l) \cdot w^{l+1} \cdot \sigma'(z^{l+1}) \cdot w^{l+2} \cdots \sigma'(z^L) \cdot \frac{\partial C}{\partial a^L}$$
+                    </div>
+                    <p>This is a product of many terms $w^j \sigma'(z^j)$.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Why Gradients Vanish</h4>
+                    <div class="math-box formula">
+                        $$\sigma'(z) = \sigma(z)(1 - \sigma(z)) \leq \frac{1}{4}$$
+                    </div>
+                    <p>The sigmoid derivative is at most 0.25! With standard initialization, $|w| < 1$ typically, so:</p>
+                    <div class="math-box formula">
+                        $$|w \sigma'(z)| < \frac{1}{4}$$
+                    </div>
+                    <p>Each layer multiplies the gradient by a factor less than 1/4. After $n$ layers:</p>
+                    <div class="math-box formula">
+                        $$|\text{gradient}| \propto \left(\frac{1}{4}\right)^n \rightarrow 0$$
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Exploding Gradients</h4>
+                    <div class="math-box">
+                        <p>If $|w \sigma'(z)| > 1$, the opposite occurs:</p>
+                        $$|\text{gradient}| \propto k^n \rightarrow \infty \quad \text{for } k > 1$$
+                        <p>Gradients explode, causing unstable training with wild weight oscillations.</p>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Solutions</h4>
+                    <div class="math-box">
+                        <p><strong>ReLU Activation:</strong></p>
+                        $$\text{ReLU}(z) = \max(0, z), \quad \text{ReLU}'(z) = \begin{cases} 1 & z > 0 \\ 0 & z \leq 0 \end{cases}$$
+                        <p>Gradient is 1 for positive inputs—no vanishing!</p>
+                    </div>
+                    <div class="math-box">
+                        <p><strong>He Initialization:</strong></p>
+                        $$w \sim \mathcal{N}\left(0, \sqrt{\frac{2}{n_{in}}}\right)$$
+                        <p>Scales initial weights based on number of inputs to maintain variance across layers.</p>
+                    </div>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>Think of gradients as a signal flowing backward through the network. Each layer is like a leaky pipe—sigmoid activation loses at least 75% of the signal at each layer. After many layers, almost no signal reaches the early layers. ReLU acts like a pipe with no leakage (for positive values), allowing gradients to flow freely.</p>
+                </div>
+            </div>
+
+            <!-- CNN Detail Panel -->
+            <div id="cnn-detail" class="math-detail-panel">
+                <h3>
+                    <span>Convolutional Networks — Mathematical Foundation</span>
+                    <button class="close-btn" onclick="hideDetail('cnn')">✕ Close</button>
+                </h3>
+
+                <div class="math-section">
+                    <h4>Local Receptive Fields</h4>
+                    <p>Instead of connecting every input to every neuron, each neuron connects only to a small local region of the input:</p>
+                    <div class="math-box formula">
+                        $$a^1_{j,k} = \sigma\left( b + \sum_{l=0}^{f-1} \sum_{m=0}^{f-1} w_{l,m} \cdot a^0_{j+l, k+m} \right)$$
+                    </div>
+                    
+                    <div class="variable-list">
+                        <span class="var">$f$</span><span class="desc">Filter (kernel) size (e.g., 3×3, 5×5)</span>
+                        <span class="var">$w_{l,m}$</span><span class="desc">Shared weights in the filter</span>
+                        <span class="var">$a^0_{j,k}$</span><span class="desc">Input at position $(j,k)$</span>
+                        <span class="var">$a^1_{j,k}$</span><span class="desc">Output feature map at position $(j,k)$</span>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Convolution Operation</h4>
+                    <div class="math-box formula">
+                        $$(I * K)_{i,j} = \sum_{m} \sum_{n} I_{i+m, j+n} \cdot K_{m,n}$$
+                    </div>
+                    <p>The kernel $K$ slides across input $I$, computing dot products at each position to produce the feature map.</p>
+                </div>
+
+                <div class="math-section">
+                    <h4>Output Dimensions</h4>
+                    <div class="math-box formula">
+                        $$\text{output size} = \frac{n - f + 2p}{s} + 1$$
+                    </div>
+                    
+                    <div class="variable-list">
+                        <span class="var">$n$</span><span class="desc">Input size</span>
+                        <span class="var">$f$</span><span class="desc">Filter size</span>
+                        <span class="var">$p$</span><span class="desc">Padding (zeros added around input)</span>
+                        <span class="var">$s$</span><span class="desc">Stride (step size of filter movement)</span>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Pooling Layers</h4>
+                    <div class="math-box">
+                        <p><strong>Max Pooling:</strong></p>
+                        $$a^{pool}_{j,k} = \max_{0 \leq l,m < p} a^{conv}_{j \cdot s + l, k \cdot s + m}$$
+                        <p>Takes the maximum value in each pooling region, providing translation invariance and dimensionality reduction.</p>
+                    </div>
+                </div>
+
+                <div class="math-section">
+                    <h4>Parameter Efficiency</h4>
+                    <div class="math-box">
+                        <p><strong>Fully connected:</strong> For 28×28 input to 100 neurons:</p>
+                        $$\text{parameters} = 28 \times 28 \times 100 = 78,400$$
+                        <p><strong>Convolutional:</strong> For 5×5 filter with 20 feature maps:</p>
+                        $$\text{parameters} = 5 \times 5 \times 20 = 500$$
+                        <p>~150× fewer parameters through weight sharing!</p>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h5>Typical CNN Architecture</h5>
+                    <ul class="step-list">
+                        <li><strong>Input:</strong> Raw image (e.g., 28×28×1 for MNIST)</li>
+                        <li><strong>Conv + ReLU:</strong> Extract local features with $k$ filters</li>
+                        <li><strong>Pooling:</strong> Reduce spatial dimensions, gain invariance</li>
+                        <li><strong>Repeat:</strong> Stack more Conv/Pool layers for hierarchical features</li>
+                        <li><strong>Flatten + FC:</strong> Dense layers for final classification</li>
+                    </ul>
+                </div>
+
+                <div class="intuition-box">
+                    <h5>Intuition</h5>
+                    <p>CNNs exploit two key insights: (1) <strong>Local patterns matter</strong>—edges, textures exist in small regions; (2) <strong>Patterns are translation-invariant</strong>—an edge is an edge regardless of position. Weight sharing means learning one edge detector that works everywhere. Deeper layers combine local features into increasingly abstract concepts: edges → shapes → parts → objects.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="icon">◆</span> Why Fundamentals Matter</h2>
+            <p>
+                While modern libraries make it easy to build neural networks quickly, understanding the underlying principles provides <strong>lasting insights</strong> that remain relevant as technologies evolve.
+            </p>
+            <div class="quote">
+                "Technologies come and technologies go, but insight is forever. We'll learn the core principles behind neural networks and deep learning by attacking concrete problems."
+            </div>
+            <p>
+                A deep understanding of concepts like backpropagation helps you become not just a user of deep learning tools, but someone capable of understanding why things work, diagnosing problems, and innovating new algorithms.
+            </p>
+        </section>
+
+        <footer>
+            <p>
+                Source: <a href="http://neuralnetworksanddeeplearning.com/" target="_blank">Neural Networks and Deep Learning</a> by Michael A. Nielsen (2015)
+            </p>
+            <p style="margin-top: 8px;">
+                Licensed under Creative Commons Attribution-NonCommercial 3.0
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Render KaTeX
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        });
+
+        // Show detail panel
+        function showDetail(concept) {
+            // Hide all panels first
+            document.querySelectorAll('.math-detail-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Remove active state from all cards
+            document.querySelectorAll('.concept-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Show selected panel
+            const panel = document.getElementById(concept + '-detail');
+            if (panel) {
+                panel.classList.add('active');
+                
+                // Add active state to clicked card
+                event.currentTarget.classList.add('active');
+                
+                // Scroll to panel
+                setTimeout(() => {
+                    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+
+                // Re-render math in the panel
+                if (typeof renderMathInElement !== 'undefined') {
+                    renderMathInElement(panel, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                }
+            }
+        }
+
+        // Hide detail panel
+        function hideDetail(concept) {
+            const panel = document.getElementById(concept + '-detail');
+            if (panel) {
+                panel.classList.remove('active');
+            }
+            
+            // Remove active state from cards
+            document.querySelectorAll('.concept-card').forEach(card => {
+                card.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>
